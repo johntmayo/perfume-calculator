@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfume Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', 'Georgia', 'Times New Roman', serif;
+            font-weight: 300;
+            background: linear-gradient(135deg, #57572e 0%, #836745 50%, #404b32 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2a2a1a;
+            letter-spacing: 0.3px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f5f4f0;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #afac9b;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #57572e 0%, #836745 50%, #404b32 100%);
+            color: #f5f4f0;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 2.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            font-size: 1.2em;
+            font-weight: 300;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
+            font-style: italic;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-group label {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            font-weight: 500;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #57572e;
+            letter-spacing: 0.5px;
+        }
+
+        .info-group input {
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            padding: 12px;
+            border: 2px solid #afac9b;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+            background: #fffef9;
+            letter-spacing: 0.3px;
+        }
+
+        .info-group input:focus {
+            outline: none;
+            border-color: #836745;
+            background: #fffef9;
+        }
+
+        .target-section {
+            background: #e8e6df;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border: 2px solid #afac9b;
+        }
+
+        .target-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .target-group label {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            font-weight: 500;
+            font-size: 1.1em;
+            color: #57572e;
+            letter-spacing: 0.5px;
+        }
+
+        .target-group input {
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            padding: 10px;
+            border: 2px solid #afac9b;
+            border-radius: 8px;
+            font-size: 1em;
+            width: 100px;
+            background: #fffef9;
+            letter-spacing: 0.3px;
+        }
+
+        .target-group input:focus {
+            outline: none;
+            border-color: #836745;
+            background: #fffef9;
+        }
+
+        .summary {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .summary-item {
+            background: #fffef9;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 2px solid #afac9b;
+            min-width: 150px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-item .label {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            font-size: 1em;
+            color: #57572e;
+            margin-bottom: 5px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-item .value {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #6a3327;
+            letter-spacing: 0.5px;
+        }
+
+        .ingredients-section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #57572e;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .add-ingredient-btn {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            background: #836745;
+            color: #f5f4f0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .add-ingredient-btn:hover {
+            background: #6a4f35;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .ingredients-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fffef9;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            border: 1px solid #afac9b;
+        }
+
+        .ingredients-table thead {
+            background: linear-gradient(135deg, #57572e 0%, #836745 100%);
+            color: #f5f4f0;
+        }
+
+        .ingredients-table th {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .ingredients-table td {
+            font-family: 'Lato', sans-serif;
+            font-weight: 300;
+            padding: 15px;
+            border-bottom: 1px solid #d4d2c8;
+            letter-spacing: 0.3px;
+        }
+
+        .ingredients-table tbody tr:hover {
+            background: #e8e6df;
+        }
+
+        .ingredients-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ingredients-table input {
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            padding: 8px;
+            border: 2px solid #afac9b;
+            border-radius: 6px;
+            font-size: 0.95em;
+            width: 100%;
+            transition: all 0.3s;
+            background: #fffef9;
+            letter-spacing: 0.3px;
+        }
+
+        .ingredients-table input:focus {
+            outline: none;
+            border-color: #836745;
+            background: #fffef9;
+        }
+
+        .family-input {
+            width: 60px !important;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .drops-input {
+            width: 80px !important;
+            text-align: center;
+        }
+
+        .target-drops {
+            font-family: 'Lato', sans-serif;
+            font-weight: 500;
+            color: #57572e;
+            background: #e8e6df;
+            cursor: not-allowed;
+        }
+
+        .drops-needed {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-weight: 600;
+            color: #404b32;
+            font-size: 1.15em;
+            letter-spacing: 0.5px;
+        }
+
+        .delete-btn {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            background: #6a3327;
+            color: #f5f4f0;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .delete-btn:hover {
+            background: #4d2419;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .total-row {
+            background: #d4d2c8 !important;
+            font-weight: 500;
+            border-top: 3px solid #836745;
+        }
+
+        .total-row td {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+
+            .target-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .ingredients-table {
+                font-size: 0.9em;
+            }
+
+            .ingredients-table th,
+            .ingredients-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Perfume Calculator</h1>
+            <p>Calculate drops needed to complete your perfume formulation</p>
+        </div>
+
+        <div class="content">
+            <div class="info-section">
+                <div class="info-group">
+                    <label for="scent-name">Scent Name:</label>
+                    <input type="text" id="scent-name" placeholder="Enter scent name">
+                </div>
+                <div class="info-group">
+                    <label for="perfumer-name">Perfumer:</label>
+                    <input type="text" id="perfumer-name" placeholder="Enter perfumer name">
+                </div>
+            </div>
+
+            <div class="target-section">
+                <div class="target-group">
+                    <label for="target-drops">Target Total Drops:</label>
+                    <input type="number" id="target-drops" value="100" min="1">
+                </div>
+                <div class="summary">
+                    <div class="summary-item">
+                        <div class="label">Current Total</div>
+                        <div class="value" id="current-total">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="label">Drops Needed</div>
+                        <div class="value" id="drops-needed-total">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="label">Ratio</div>
+                        <div class="value" id="ratio">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ingredients-section">
+                <div class="section-title">
+                    <h2>Ingredients</h2>
+                    <button class="add-ingredient-btn" onclick="addIngredient()">+ Add Ingredient</button>
+                </div>
+
+                <table class="ingredients-table">
+                    <thead>
+                        <tr>
+                            <th>Family</th>
+                            <th>Ingredient</th>
+                            <th>Drops Added</th>
+                            <th>Target Drops <span style="font-size: 0.8em; font-weight: normal;">(auto-calculated)</span></th>
+                            <th>Drops Needed</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="ingredients-tbody">
+                        <!-- Ingredients will be added here -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="2"><strong>TOTAL:</strong></td>
+                            <td id="total-drops-added">0</td>
+                            <td id="total-target-drops">0</td>
+                            <td id="total-drops-needed">0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ingredients = [];
+        let ingredientIdCounter = 0;
+
+        // Load data from localStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromStorage();
+            updateCalculations();
+        });
+
+        function addIngredient(family = '', name = '', dropsAdded = '', targetDrops = '') {
+            const ingredient = {
+                id: ingredientIdCounter++,
+                family: family,
+                name: name,
+                dropsAdded: dropsAdded,
+                targetDrops: targetDrops
+            };
+            ingredients.push(ingredient);
+            renderIngredients();
+            saveToStorage();
+            updateCalculations();
+        }
+
+        function removeIngredient(id) {
+            ingredients = ingredients.filter(ing => ing.id !== id);
+            renderIngredients();
+            saveToStorage();
+            updateCalculations();
+        }
+
+        function renderIngredients() {
+            const tbody = document.getElementById('ingredients-tbody');
+            tbody.innerHTML = '';
+
+            ingredients.forEach(ingredient => {
+                const row = document.createElement('tr');
+                row.dataset.id = ingredient.id;
+                const dropsAdded = parseFloat(ingredient.dropsAdded) || 0;
+                const targetTotal = parseFloat(document.getElementById('target-drops').value) || 100;
+                const totalDrops = ingredients.reduce((sum, ing) => sum + (parseFloat(ing.dropsAdded) || 0), 0);
+                const ratio = totalDrops > 0 ? targetTotal / totalDrops : 0;
+                const calculatedTargetDrops = dropsAdded * ratio;
+                const targetDrops = parseFloat(ingredient.targetDrops) || calculatedTargetDrops;
+                const dropsNeeded = Math.max(0, targetDrops - dropsAdded);
+
+                row.innerHTML = `
+                    <td>
+                        <input type="text" class="family-input" value="${ingredient.family}" 
+                               onchange="updateIngredient(${ingredient.id}, 'family', this.value)">
+                    </td>
+                    <td>
+                        <input type="text" value="${ingredient.name}" 
+                               onchange="updateIngredient(${ingredient.id}, 'name', this.value)"
+                               placeholder="Ingredient name">
+                    </td>
+                    <td>
+                        <input type="number" class="drops-input" value="${ingredient.dropsAdded}" 
+                               min="0" step="0.1"
+                               onchange="updateIngredient(${ingredient.id}, 'dropsAdded', this.value)"
+                               oninput="updateCalculations()">
+                    </td>
+                    <td>
+                        <input type="number" class="drops-input target-drops" value="${targetDrops.toFixed(1)}" 
+                               min="0" step="0.1" readonly
+                               title="Calculated automatically based on ratio">
+                    </td>
+                    <td class="drops-needed">${dropsNeeded.toFixed(1)}</td>
+                    <td>
+                        <button class="delete-btn" onclick="removeIngredient(${ingredient.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Update calculations after rendering
+            setTimeout(updateCalculations, 0);
+        }
+
+        function updateIngredient(id, field, value) {
+            const ingredient = ingredients.find(ing => ing.id === id);
+            if (ingredient) {
+                ingredient[field] = value;
+                saveToStorage();
+                updateCalculations();
+                renderIngredients();
+            }
+        }
+
+        function updateCalculations() {
+            // Recalculate from rendered inputs to get current values
+            const rows = document.querySelectorAll('#ingredients-tbody tr');
+            let totalDropsAdded = 0;
+
+            // First pass: calculate total drops added
+            rows.forEach(row => {
+                const dropsAddedInput = row.querySelector('input[type="number"]:nth-of-type(1)');
+                if (dropsAddedInput) {
+                    const dropsAdded = parseFloat(dropsAddedInput.value) || 0;
+                    totalDropsAdded += dropsAdded;
+                }
+            });
+
+            // Get target total and calculate ratio
+            const targetTotal = parseFloat(document.getElementById('target-drops').value) || 100;
+            const ratio = totalDropsAdded > 0 ? targetTotal / totalDropsAdded : 0;
+
+            // Second pass: calculate target drops and drops needed for each ingredient
+            let totalTargetDrops = 0;
+            let totalDropsNeeded = 0;
+
+            rows.forEach((row) => {
+                const dropsAddedInput = row.querySelector('input[type="number"]:nth-of-type(1)');
+                const targetDropsInput = row.querySelector('input[type="number"]:nth-of-type(2)');
+                
+                if (dropsAddedInput) {
+                    const dropsAdded = parseFloat(dropsAddedInput.value) || 0;
+                    // Calculate target drops based on ratio
+                    const calculatedTargetDrops = dropsAdded * ratio;
+                    
+                    // Update target drops input (but don't trigger change event to avoid loop)
+                    if (targetDropsInput && targetDropsInput !== document.activeElement) {
+                        targetDropsInput.value = calculatedTargetDrops.toFixed(1);
+                        // Update the ingredient data
+                        const ingredientId = parseInt(row.dataset.id);
+                        const ingredient = ingredients.find(ing => ing.id === ingredientId);
+                        if (ingredient) {
+                            ingredient.targetDrops = calculatedTargetDrops.toFixed(1);
+                        }
+                    }
+                    
+                    const targetDrops = calculatedTargetDrops;
+                    const dropsNeeded = Math.max(0, targetDrops - dropsAdded);
+
+                    totalTargetDrops += targetDrops;
+                    totalDropsNeeded += dropsNeeded;
+
+                    // Update the drops needed cell
+                    const dropsNeededCell = row.querySelector('.drops-needed');
+                    if (dropsNeededCell) {
+                        dropsNeededCell.textContent = dropsNeeded.toFixed(1);
+                    }
+                }
+            });
+
+            // Update totals
+            document.getElementById('total-drops-added').textContent = totalDropsAdded.toFixed(1);
+            document.getElementById('total-target-drops').textContent = totalTargetDrops.toFixed(1);
+            document.getElementById('total-drops-needed').textContent = totalDropsNeeded.toFixed(1);
+
+            // Update summary
+            document.getElementById('current-total').textContent = totalDropsAdded.toFixed(1);
+            document.getElementById('drops-needed-total').textContent = totalDropsNeeded.toFixed(1);
+            document.getElementById('ratio').textContent = ratio.toFixed(2);
+        }
+
+        function saveToStorage() {
+            const data = {
+                scentName: document.getElementById('scent-name').value,
+                perfumerName: document.getElementById('perfumer-name').value,
+                targetDrops: document.getElementById('target-drops').value,
+                ingredients: ingredients
+            };
+            localStorage.setItem('perfumeCalculator', JSON.stringify(data));
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('perfumeCalculator');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.getElementById('scent-name').value = data.scentName || '';
+                    document.getElementById('perfumer-name').value = data.perfumerName || '';
+                    document.getElementById('target-drops').value = data.targetDrops || 100;
+                    
+                    if (data.ingredients && data.ingredients.length > 0) {
+                        ingredients = data.ingredients;
+                        ingredientIdCounter = Math.max(...ingredients.map(i => i.id), -1) + 1;
+                        renderIngredients();
+                    }
+                } catch (e) {
+                    console.error('Error loading saved data:', e);
+                }
+            }
+        }
+
+        // Save on input changes
+        document.getElementById('scent-name').addEventListener('input', saveToStorage);
+        document.getElementById('perfumer-name').addEventListener('input', saveToStorage);
+        document.getElementById('target-drops').addEventListener('input', () => {
+            saveToStorage();
+            updateCalculations();
+        });
+
+        // Add some example ingredients on first load if none exist
+        if (ingredients.length === 0) {
+            addIngredient('W', 'Cederwood Fl.', 7, 35);
+            addIngredient('G', 'Tomato leaf ABS 10% in DPG', 6, 30);
+            addIngredient('S', 'Black Pepper Fl.', 2, 10);
+        }
+    </script>
+</body>
+</html>
+
