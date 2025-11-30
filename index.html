@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Perfume Calculator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -219,6 +219,10 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
+        .ingredients-table-wrapper {
+            width: 100%;
+        }
+
         .ingredients-table {
             width: 100%;
             border-collapse: collapse;
@@ -342,23 +346,257 @@
             letter-spacing: 0.5px;
         }
 
+        /* Mobile Optimizations */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 15px;
+                border-width: 1px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+                letter-spacing: 0.5px;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
             .info-section {
                 grid-template-columns: 1fr;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
+            .info-group label {
+                font-size: 1em;
+            }
+
+            .info-group input {
+                padding: 14px;
+                font-size: 16px; /* Prevents zoom on iOS */
             }
 
             .target-section {
                 flex-direction: column;
+                align-items: stretch;
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .target-group {
+                width: 100%;
+                flex-direction: column;
                 align-items: flex-start;
+                gap: 8px;
+            }
+
+            .target-group input {
+                width: 100%;
+                padding: 14px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .summary {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .summary-item {
+                min-width: auto;
+                width: 100%;
+            }
+
+            .section-title {
+                font-size: 1.4em;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .add-ingredient-btn {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1em;
+            }
+
+            /* Convert table to scrollable on mobile */
+            .ingredients-table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 20px -15px 0 -15px;
+                padding: 0 15px;
             }
 
             .ingredients-table {
-                font-size: 0.9em;
+                font-size: 0.85em;
+                min-width: 600px; /* Force horizontal scroll */
+                display: table;
             }
 
             .ingredients-table th,
             .ingredients-table td {
-                padding: 10px;
+                padding: 10px 8px;
+                white-space: nowrap;
+            }
+
+            .ingredients-table th {
+                font-size: 0.85em;
+                padding: 12px 8px;
+            }
+
+            .ingredients-table th:nth-child(1),
+            .ingredients-table td:nth-child(1) {
+                min-width: 60px;
+            }
+
+            .ingredients-table th:nth-child(2),
+            .ingredients-table td:nth-child(2) {
+                min-width: 150px;
+            }
+
+            .ingredients-table th:nth-child(3),
+            .ingredients-table td:nth-child(3),
+            .ingredients-table th:nth-child(4),
+            .ingredients-table td:nth-child(4),
+            .ingredients-table th:nth-child(5),
+            .ingredients-table td:nth-child(5) {
+                min-width: 90px;
+            }
+
+            .ingredients-table th:nth-child(6),
+            .ingredients-table td:nth-child(6) {
+                min-width: 80px;
+            }
+
+            .family-input {
+                width: 100% !important;
+            }
+
+            .drops-input {
+                width: 100% !important;
+            }
+
+            .delete-btn {
+                padding: 8px 12px;
+                font-size: 0.85em;
+                width: 100%;
+            }
+
+            .total-row td {
+                font-size: 1em;
+                padding: 12px 8px;
+            }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .header p {
+                font-size: 0.9em;
+            }
+
+            .content {
+                padding: 15px 10px;
+            }
+
+            .section-title {
+                font-size: 1.2em;
+            }
+
+            .ingredients-table {
+                font-size: 0.75em;
+                min-width: 550px;
+            }
+
+            .ingredients-table th,
+            .ingredients-table td {
+                padding: 8px 5px;
+            }
+
+            .ingredients-table th:nth-child(1),
+            .ingredients-table td:nth-child(1) {
+                min-width: 50px;
+            }
+
+            .ingredients-table th:nth-child(2),
+            .ingredients-table td:nth-child(2) {
+                min-width: 120px;
+            }
+
+            .ingredients-table th:nth-child(3),
+            .ingredients-table td:nth-child(3),
+            .ingredients-table th:nth-child(4),
+            .ingredients-table td:nth-child(4),
+            .ingredients-table th:nth-child(5),
+            .ingredients-table td:nth-child(5) {
+                min-width: 75px;
+            }
+
+            .ingredients-table th:nth-child(6),
+            .ingredients-table td:nth-child(6) {
+                min-width: 70px;
+            }
+
+            .summary-item .value {
+                font-size: 1.4em;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .add-ingredient-btn,
+            .delete-btn {
+                min-height: 44px; /* iOS touch target minimum */
+            }
+
+            .ingredients-table input {
+                min-height: 44px;
+                padding: 12px;
+            }
+
+            .info-group input,
+            .target-group input {
+                min-height: 44px;
+            }
+
+            /* Prevent text selection on buttons */
+            .add-ingredient-btn,
+            .delete-btn {
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
+                -webkit-user-select: none;
+            }
+        }
+
+        /* Prevent zoom on input focus for iOS */
+        @supports (-webkit-touch-callout: none) {
+            .info-group input,
+            .target-group input,
+            .ingredients-table input {
+                font-size: 16px !important;
             }
         }
     </style>
@@ -409,6 +647,7 @@
                     <button class="add-ingredient-btn" onclick="addIngredient()">+ Add Ingredient</button>
                 </div>
 
+                <div class="ingredients-table-wrapper">
                 <table class="ingredients-table">
                     <thead>
                         <tr>
@@ -433,6 +672,7 @@
                         </tr>
                     </tfoot>
                 </table>
+                </div>
             </div>
         </div>
     </div>
