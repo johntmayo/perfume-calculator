@@ -64,6 +64,85 @@
             padding: 30px;
         }
 
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #afac9b;
+        }
+
+        .tab-button {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            background: transparent;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #57572e;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .tab-button:hover {
+            color: #836745;
+            background: #e8e6df;
+        }
+
+        .tab-button.active {
+            color: #836745;
+            border-bottom-color: #836745;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Scale to 100g button */
+        .scale-button {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            background: #404b32;
+            color: #f5f4f0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-left: 10px;
+        }
+
+        .scale-button:hover {
+            background: #57572e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Weight-specific styles */
+        .weight-input {
+            width: 100px !important;
+        }
+
+        .unit-label {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            font-size: 0.9em;
+            color: #57572e;
+            margin-left: 5px;
+            font-weight: 500;
+        }
+
         .info-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -109,11 +188,19 @@
             border-radius: 10px;
             margin-bottom: 30px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 15px;
             border: 2px solid #afac9b;
+        }
+
+        .target-section-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            flex: 1;
         }
 
         .target-group {
@@ -361,6 +448,21 @@
                 padding: 20px 15px;
             }
 
+            .tabs {
+                margin-bottom: 20px;
+            }
+
+            .tab-button {
+                padding: 10px 16px;
+                font-size: 1em;
+            }
+
+            .scale-button {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
             .header h1 {
                 font-size: 1.8em;
                 letter-spacing: 0.5px;
@@ -395,6 +497,10 @@
                 align-items: stretch;
                 padding: 15px;
                 gap: 15px;
+            }
+
+            .target-section-left {
+                width: 100%;
             }
 
             .target-group {
@@ -605,10 +711,16 @@
     <div class="container">
         <div class="header">
             <h1>Perfume Calculator</h1>
-            <p>Calculate drops needed to complete your perfume formulation</p>
+            <p>Calculate drops or weight needed to complete your perfume formulation</p>
         </div>
 
         <div class="content">
+            <!-- Tab Navigation -->
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('drops', this)">Drops</button>
+                <button class="tab-button" onclick="switchTab('weight', this)">Weight</button>
+            </div>
+
             <div class="info-section">
                 <div class="info-group">
                     <label for="scent-name">Scent Name:</label>
@@ -620,58 +732,124 @@
                 </div>
             </div>
 
-            <div class="target-section">
-                <div class="target-group">
-                    <label for="target-drops">Target Total Drops:</label>
-                    <input type="number" id="target-drops" value="100" min="1">
+            <!-- Drops Tab Content -->
+            <div id="drops-tab" class="tab-content active">
+                <div class="target-section">
+                    <div class="target-group">
+                        <label for="target-drops">Target Total Drops:</label>
+                        <input type="number" id="target-drops" value="100" min="1">
+                    </div>
+                    <div class="summary">
+                        <div class="summary-item">
+                            <div class="label">Current Total</div>
+                            <div class="value" id="current-total">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Drops Needed</div>
+                            <div class="value" id="drops-needed-total">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Ratio</div>
+                            <div class="value" id="ratio">0</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="summary">
-                    <div class="summary-item">
-                        <div class="label">Current Total</div>
-                        <div class="value" id="current-total">0</div>
+
+                <div class="ingredients-section">
+                    <div class="section-title">
+                        <h2>Ingredients</h2>
+                        <button class="add-ingredient-btn" onclick="addIngredient('drops')">+ Add Ingredient</button>
                     </div>
-                    <div class="summary-item">
-                        <div class="label">Drops Needed</div>
-                        <div class="value" id="drops-needed-total">0</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="label">Ratio</div>
-                        <div class="value" id="ratio">0</div>
+
+                    <div class="ingredients-table-wrapper">
+                    <table class="ingredients-table" id="drops-table">
+                        <thead>
+                            <tr>
+                                <th>Family</th>
+                                <th>Ingredient</th>
+                                <th>Drops Added</th>
+                                <th>Target Drops <span style="font-size: 0.8em; font-weight: normal;">(auto-calculated)</span></th>
+                                <th>Drops Needed</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ingredients-tbody">
+                            <!-- Ingredients will be added here -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="2"><strong>TOTAL:</strong></td>
+                                <td id="total-drops-added">0</td>
+                                <td id="total-target-drops">0</td>
+                                <td id="total-drops-needed">0</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
                     </div>
                 </div>
             </div>
 
-            <div class="ingredients-section">
-                <div class="section-title">
-                    <h2>Ingredients</h2>
-                    <button class="add-ingredient-btn" onclick="addIngredient()">+ Add Ingredient</button>
+            <!-- Weight Tab Content -->
+            <div id="weight-tab" class="tab-content">
+                <div class="target-section">
+                    <div class="target-section-left">
+                        <div class="target-group">
+                            <label for="target-weight">Target Total Weight (grams):</label>
+                            <input type="number" id="target-weight" value="100" min="0.1" step="0.1">
+                        </div>
+                        <div class="summary">
+                            <div class="summary-item">
+                                <div class="label">Current Total</div>
+                                <div class="value" id="current-weight-total">0</div>
+                                <span class="unit-label">g</span>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">Weight Needed</div>
+                                <div class="value" id="weight-needed-total">0</div>
+                                <span class="unit-label">g</span>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">Ratio</div>
+                                <div class="value" id="weight-ratio">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="scale-button" onclick="scaleTo100g()">Scale to 100g</button>
                 </div>
 
-                <div class="ingredients-table-wrapper">
-                <table class="ingredients-table">
-                    <thead>
-                        <tr>
-                            <th>Family</th>
-                            <th>Ingredient</th>
-                            <th>Drops Added</th>
-                            <th>Target Drops <span style="font-size: 0.8em; font-weight: normal;">(auto-calculated)</span></th>
-                            <th>Drops Needed</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="ingredients-tbody">
-                        <!-- Ingredients will be added here -->
-                    </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="2"><strong>TOTAL:</strong></td>
-                            <td id="total-drops-added">0</td>
-                            <td id="total-target-drops">0</td>
-                            <td id="total-drops-needed">0</td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="ingredients-section">
+                    <div class="section-title">
+                        <h2>Ingredients</h2>
+                        <button class="add-ingredient-btn" onclick="addIngredient('weight')">+ Add Ingredient</button>
+                    </div>
+
+                    <div class="ingredients-table-wrapper">
+                    <table class="ingredients-table" id="weight-table">
+                        <thead>
+                            <tr>
+                                <th>Family</th>
+                                <th>Ingredient</th>
+                                <th>Weight Added (g)</th>
+                                <th>Target Weight (g) <span style="font-size: 0.8em; font-weight: normal;">(auto-calculated)</span></th>
+                                <th>Weight Needed (g)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="weight-ingredients-tbody">
+                            <!-- Ingredients will be added here -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="2"><strong>TOTAL:</strong></td>
+                                <td id="total-weight-added">0</td>
+                                <td id="total-target-weight">0</td>
+                                <td id="total-weight-needed">0</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -679,33 +857,85 @@
 
     <script>
         let ingredients = [];
+        let weightIngredients = [];
         let ingredientIdCounter = 0;
+        let weightIngredientIdCounter = 0;
+        let currentTab = 'drops';
 
         // Load data from localStorage on page load
         window.addEventListener('DOMContentLoaded', () => {
             loadFromStorage();
             updateCalculations();
+            updateWeightCalculations();
         });
 
-        function addIngredient(family = '', name = '', dropsAdded = '', targetDrops = '') {
-            const ingredient = {
-                id: ingredientIdCounter++,
-                family: family,
-                name: name,
-                dropsAdded: dropsAdded,
-                targetDrops: targetDrops
-            };
-            ingredients.push(ingredient);
-            renderIngredients();
+        function switchTab(tab, buttonElement) {
+            currentTab = tab;
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (buttonElement) {
+                buttonElement.classList.add('active');
+            } else {
+                // Fallback if called without button element
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    if (btn.textContent.trim().toLowerCase() === tab) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tab + '-tab').classList.add('active');
+            
             saveToStorage();
-            updateCalculations();
         }
 
-        function removeIngredient(id) {
-            ingredients = ingredients.filter(ing => ing.id !== id);
-            renderIngredients();
+        function addIngredient(mode = 'drops', family = '', name = '', valueAdded = '', targetValue = '') {
+            if (mode === 'drops') {
+                const ingredient = {
+                    id: ingredientIdCounter++,
+                    family: family,
+                    name: name,
+                    dropsAdded: valueAdded,
+                    targetDrops: targetValue
+                };
+                ingredients.push(ingredient);
+                renderIngredients();
+            } else {
+                const ingredient = {
+                    id: weightIngredientIdCounter++,
+                    family: family,
+                    name: name,
+                    weightAdded: valueAdded,
+                    targetWeight: targetValue
+                };
+                weightIngredients.push(ingredient);
+                renderWeightIngredients();
+            }
             saveToStorage();
-            updateCalculations();
+            if (mode === 'drops') {
+                updateCalculations();
+            } else {
+                updateWeightCalculations();
+            }
+        }
+
+        function removeIngredient(id, mode = 'drops') {
+            if (mode === 'drops') {
+                ingredients = ingredients.filter(ing => ing.id !== id);
+                renderIngredients();
+                updateCalculations();
+            } else {
+                weightIngredients = weightIngredients.filter(ing => ing.id !== id);
+                renderWeightIngredients();
+                updateWeightCalculations();
+            }
+            saveToStorage();
         }
 
         function renderIngredients() {
@@ -726,17 +956,17 @@
                 row.innerHTML = `
                     <td>
                         <input type="text" class="family-input" value="${ingredient.family}" 
-                               onchange="updateIngredient(${ingredient.id}, 'family', this.value)">
+                               onchange="updateIngredient(${ingredient.id}, 'family', this.value, 'drops')">
                     </td>
                     <td>
                         <input type="text" value="${ingredient.name}" 
-                               onchange="updateIngredient(${ingredient.id}, 'name', this.value)"
+                               onchange="updateIngredient(${ingredient.id}, 'name', this.value, 'drops')"
                                placeholder="Ingredient name">
                     </td>
                     <td>
                         <input type="number" class="drops-input" value="${ingredient.dropsAdded}" 
                                min="0" step="0.1"
-                               onchange="updateIngredient(${ingredient.id}, 'dropsAdded', this.value)"
+                               onchange="updateIngredient(${ingredient.id}, 'dropsAdded', this.value, 'drops')"
                                oninput="updateCalculations()">
                     </td>
                     <td>
@@ -746,7 +976,7 @@
                     </td>
                     <td class="drops-needed">${dropsNeeded.toFixed(1)}</td>
                     <td>
-                        <button class="delete-btn" onclick="removeIngredient(${ingredient.id})">Delete</button>
+                        <button class="delete-btn" onclick="removeIngredient(${ingredient.id}, 'drops')">Delete</button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -756,13 +986,70 @@
             setTimeout(updateCalculations, 0);
         }
 
-        function updateIngredient(id, field, value) {
-            const ingredient = ingredients.find(ing => ing.id === id);
+        function renderWeightIngredients() {
+            const tbody = document.getElementById('weight-ingredients-tbody');
+            tbody.innerHTML = '';
+
+            weightIngredients.forEach(ingredient => {
+                const row = document.createElement('tr');
+                row.dataset.id = ingredient.id;
+                const weightAdded = parseFloat(ingredient.weightAdded) || 0;
+                const targetTotal = parseFloat(document.getElementById('target-weight').value) || 100;
+                const totalWeight = weightIngredients.reduce((sum, ing) => sum + (parseFloat(ing.weightAdded) || 0), 0);
+                const ratio = totalWeight > 0 ? targetTotal / totalWeight : 0;
+                const calculatedTargetWeight = weightAdded * ratio;
+                const targetWeight = parseFloat(ingredient.targetWeight) || calculatedTargetWeight;
+                const weightNeeded = Math.max(0, targetWeight - weightAdded);
+
+                row.innerHTML = `
+                    <td>
+                        <input type="text" class="family-input" value="${ingredient.family}" 
+                               onchange="updateIngredient(${ingredient.id}, 'family', this.value, 'weight')">
+                    </td>
+                    <td>
+                        <input type="text" value="${ingredient.name}" 
+                               onchange="updateIngredient(${ingredient.id}, 'name', this.value, 'weight')"
+                               placeholder="Ingredient name">
+                    </td>
+                    <td>
+                        <input type="number" class="drops-input weight-input" value="${ingredient.weightAdded}" 
+                               min="0" step="0.01"
+                               onchange="updateIngredient(${ingredient.id}, 'weightAdded', this.value, 'weight')"
+                               oninput="updateWeightCalculations()">
+                    </td>
+                    <td>
+                        <input type="number" class="drops-input target-drops" value="${targetWeight.toFixed(2)}" 
+                               min="0" step="0.01" readonly
+                               title="Calculated automatically based on ratio">
+                    </td>
+                    <td class="drops-needed">${weightNeeded.toFixed(2)}</td>
+                    <td>
+                        <button class="delete-btn" onclick="removeIngredient(${ingredient.id}, 'weight')">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            setTimeout(updateWeightCalculations, 0);
+        }
+
+        function updateIngredient(id, field, value, mode = 'drops') {
+            if (mode === 'drops') {
+                const ingredient = ingredients.find(ing => ing.id === id);
+                if (ingredient) {
+                    ingredient[field] = value;
+                    saveToStorage();
+                    updateCalculations();
+                    renderIngredients();
+                }
+            } else {
+                const ingredient = weightIngredients.find(ing => ing.id === id);
             if (ingredient) {
-                ingredient[field] = value;
-                saveToStorage();
-                updateCalculations();
-                renderIngredients();
+                    ingredient[field] = value;
+                    saveToStorage();
+                    updateWeightCalculations();
+                    renderWeightIngredients();
+                }
             }
         }
 
@@ -833,12 +1120,81 @@
             document.getElementById('ratio').textContent = ratio.toFixed(2);
         }
 
+        function updateWeightCalculations() {
+            const rows = document.querySelectorAll('#weight-ingredients-tbody tr');
+            let totalWeightAdded = 0;
+
+            rows.forEach(row => {
+                const weightAddedInput = row.querySelector('input[type="number"]:nth-of-type(1)');
+                if (weightAddedInput) {
+                    const weightAdded = parseFloat(weightAddedInput.value) || 0;
+                    totalWeightAdded += weightAdded;
+                }
+            });
+
+            const targetTotal = parseFloat(document.getElementById('target-weight').value) || 100;
+            const ratio = totalWeightAdded > 0 ? targetTotal / totalWeightAdded : 0;
+
+            let totalTargetWeight = 0;
+            let totalWeightNeeded = 0;
+
+            rows.forEach((row) => {
+                const weightAddedInput = row.querySelector('input[type="number"]:nth-of-type(1)');
+                const targetWeightInput = row.querySelector('input[type="number"]:nth-of-type(2)');
+                
+                if (weightAddedInput) {
+                    const weightAdded = parseFloat(weightAddedInput.value) || 0;
+                    const calculatedTargetWeight = weightAdded * ratio;
+                    
+                    if (targetWeightInput && targetWeightInput !== document.activeElement) {
+                        targetWeightInput.value = calculatedTargetWeight.toFixed(2);
+                        const ingredientId = parseInt(row.dataset.id);
+                        const ingredient = weightIngredients.find(ing => ing.id === ingredientId);
+                        if (ingredient) {
+                            ingredient.targetWeight = calculatedTargetWeight.toFixed(2);
+                        }
+                    }
+                    
+                    const targetWeight = calculatedTargetWeight;
+                    const weightNeeded = Math.max(0, targetWeight - weightAdded);
+
+                    totalTargetWeight += targetWeight;
+                    totalWeightNeeded += weightNeeded;
+
+                    const weightNeededCell = row.querySelector('.drops-needed');
+                    if (weightNeededCell) {
+                        weightNeededCell.textContent = weightNeeded.toFixed(2);
+                    }
+                }
+            });
+
+            document.getElementById('total-weight-added').textContent = totalWeightAdded.toFixed(2);
+            document.getElementById('total-target-weight').textContent = totalTargetWeight.toFixed(2);
+            document.getElementById('total-weight-needed').textContent = totalWeightNeeded.toFixed(2);
+
+            document.getElementById('current-weight-total').textContent = totalWeightAdded.toFixed(2);
+            document.getElementById('weight-needed-total').textContent = totalWeightNeeded.toFixed(2);
+            document.getElementById('weight-ratio').textContent = ratio.toFixed(2);
+        }
+
+        function scaleTo100g() {
+            const currentTotal = parseFloat(document.getElementById('current-weight-total').textContent) || 0;
+            if (currentTotal > 0) {
+                document.getElementById('target-weight').value = 100;
+                updateWeightCalculations();
+                saveToStorage();
+            }
+        }
+
         function saveToStorage() {
             const data = {
                 scentName: document.getElementById('scent-name').value,
                 perfumerName: document.getElementById('perfumer-name').value,
                 targetDrops: document.getElementById('target-drops').value,
-                ingredients: ingredients
+                targetWeight: document.getElementById('target-weight').value,
+                ingredients: ingredients,
+                weightIngredients: weightIngredients,
+                currentTab: currentTab
             };
             localStorage.setItem('perfumeCalculator', JSON.stringify(data));
         }
@@ -851,11 +1207,39 @@
                     document.getElementById('scent-name').value = data.scentName || '';
                     document.getElementById('perfumer-name').value = data.perfumerName || '';
                     document.getElementById('target-drops').value = data.targetDrops || 100;
+                    document.getElementById('target-weight').value = data.targetWeight || 100;
                     
                     if (data.ingredients && data.ingredients.length > 0) {
                         ingredients = data.ingredients;
                         ingredientIdCounter = Math.max(...ingredients.map(i => i.id), -1) + 1;
                         renderIngredients();
+                    }
+                    
+                    if (data.weightIngredients && data.weightIngredients.length > 0) {
+                        weightIngredients = data.weightIngredients;
+                        weightIngredientIdCounter = Math.max(...weightIngredients.map(i => i.id), -1) + 1;
+                        renderWeightIngredients();
+                    }
+                    
+                    if (data.currentTab) {
+                        currentTab = data.currentTab;
+                        // Update tab UI
+                        const tabButtons = document.querySelectorAll('.tab-button');
+                        tabButtons.forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        if (currentTab === 'drops' && tabButtons[0]) {
+                            tabButtons[0].classList.add('active');
+                        } else if (currentTab === 'weight' && tabButtons[1]) {
+                            tabButtons[1].classList.add('active');
+                        }
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+                        const activeTab = document.getElementById(currentTab + '-tab');
+                        if (activeTab) {
+                            activeTab.classList.add('active');
+                        }
                     }
                 } catch (e) {
                     console.error('Error loading saved data:', e);
@@ -870,12 +1254,16 @@
             saveToStorage();
             updateCalculations();
         });
+        document.getElementById('target-weight').addEventListener('input', () => {
+            saveToStorage();
+            updateWeightCalculations();
+        });
 
         // Add some example ingredients on first load if none exist
         if (ingredients.length === 0) {
-            addIngredient('W', 'Cederwood Fl.', 7, 35);
-            addIngredient('G', 'Tomato leaf ABS 10% in DPG', 6, 30);
-            addIngredient('S', 'Black Pepper Fl.', 2, 10);
+            addIngredient('drops', 'W', 'Cederwood Fl.', 7, 35);
+            addIngredient('drops', 'G', 'Tomato leaf ABS 10% in DPG', 6, 30);
+            addIngredient('drops', 'S', 'Black Pepper Fl.', 2, 10);
         }
     </script>
 </body>
